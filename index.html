@@ -8,21 +8,24 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #222;
+            background-color: #121212;
             color: white;
             padding: 20px;
         }
         h1 {
-            font-size: 2em;
+            font-size: 2.5em;
             margin-bottom: 10px;
+            text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
         }
         table {
-            width: 80%;
+            width: 90%;
+            max-width: 800px;
             margin: 20px auto;
             border-collapse: collapse;
-            background-color: #333;
+            background-color: #222;
             color: white;
-            font-size: 1.2em;
+            font-size: 1.5em;
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
         }
         th, td {
             padding: 15px;
@@ -32,14 +35,39 @@
         th {
             background-color: #00ffcc;
             color: black;
+            font-size: 1.2em;
+            text-transform: uppercase;
         }
         tr:nth-child(even) {
+            background-color: #333;
+        }
+        tr:hover {
             background-color: #444;
+        }
+        .student {
+            font-weight: bold;
+            font-size: 1.8em;
+            color: #ffcc00;
+        }
+        .destination {
+            font-weight: bold;
+            font-size: 1.4em;
+            color: #ff6666;
+        }
+        .time {
+            font-size: 1.2em;
+            color: #00ffcc;
+        }
+        .refresh-info {
+            margin-top: 10px;
+            font-size: 1em;
+            color: #aaaaaa;
         }
     </style>
 </head>
 <body>
     <h1>Active Hall Passes</h1>
+    <p class="refresh-info">Refreshing in <span id="refresh-timer">10</span> seconds...</p>
     <table>
         <thead>
             <tr>
@@ -57,7 +85,7 @@
     <script>
         async function fetchPasses() {
             try {
-                const response = await fetch("https://script.google.com/macros/s/AKfycbyeu3HdtQvQeo7l_OvVVsLb0c1jFAG5v4LFMZ57pptMK3C-3q90VGPENk_o8eK86lxWMw/exec");
+                const response = await fetch("YOUR_WEB_APP_URL_HERE");
                 if (!response.ok) throw new Error(`Server returned ${response.status}`);
 
                 const data = await response.json();
@@ -77,20 +105,42 @@
                 data.slice(-10).forEach(pass => {
                     const row = document.createElement("tr");
                     row.innerHTML = `
-                        <td>${pass.student}</td>
+                        <td class="student">${pass.student}</td>
                         <td>${pass.teacher}</td>
-                        <td>${pass.destination}</td>
-                        <td>${new Date(pass.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                        <td class="destination">${getDestinationIcon(pass.destination)} ${pass.destination}</td>
+                        <td class="time">${new Date(pass.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                     `;
                     passesTable.appendChild(row);
                 });
+
             } catch (error) {
                 document.getElementById("passes").innerHTML = `<tr><td colspan="4">Error loading passes: ${error.message}</td></tr>`;
             }
         }
 
+        function getDestinationIcon(destination) {
+            const icons = {
+                "Bathroom": "🚽",
+                "Office": "🏫",
+                "Library": "📚",
+                "Nurse": "🩺",
+                "Other": "💡"
+            };
+            return icons[destination] || "➡️"; // Default arrow icon if no match
+        }
+
+        function startRefreshCountdown() {
+            let timeLeft = 10;
+            setInterval(() => {
+                timeLeft--;
+                if (timeLeft < 0) timeLeft = 10;
+                document.getElementById("refresh-timer").textContent = timeLeft;
+            }, 1000);
+        }
+
         setInterval(fetchPasses, 10000); // Refresh every 10 seconds
-        fetchPasses();
+        fetchPasses(); // Load initially
+        startRefreshCountdown();
     </script>
 </body>
 </html>
