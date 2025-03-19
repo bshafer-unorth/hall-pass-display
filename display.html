@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Hall Passes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #222;
+            color: white;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        #passes {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .pass {
+            background-color: #333;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+            text-align: left;
+        }
+        .pass strong {
+            font-size: 1.2em;
+            color: #00ffcc;
+        }
+        .time {
+            font-size: 1em;
+            color: #ffcc00;
+        }
+        .destination {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #ff6666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Active Hall Passes</h1>
+    <div id="passes">Loading...</div>
+
+    <script>
+        async function fetchPasses() {
+            try {
+                const response = await fetch("https://script.google.com/macros/s/AKfycbyv8y2ipxv27H9Q0tFuWQZk7CCSr2XO3fI8nYdhh2OahXPIJ8fGWUGYPFc3YVw7kh6kSQ/exec"); // Replace with your Web App URL
+                if (!response.ok) throw new Error(`Server returned ${response.status}`);
+
+                const data = await response.json();
+                const passesDiv = document.getElementById("passes");
+                passesDiv.innerHTML = ""; // Clear previous content
+
+                if (data.error) {
+                    passesDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+                    return;
+                }
+
+                if (data.length === 0) {
+                    passesDiv.innerHTML = "<p>No active passes.</p>";
+                    return;
+                }
+
+                data.slice(-10).forEach(pass => { // Show last 10 passes
+                    const passElement = document.createElement("div");
+                    passElement.className = "pass";
+                    passElement.innerHTML = `
+                        <strong>${pass.student}</strong> <br>
+                        <span class="destination">${pass.destination}</span><br>
+                        Teacher: ${pass.teacher}<br>
+                        <span class="time">${new Date(pass.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    `;
+                    passesDiv.appendChild(passElement);
+                });
+            } catch (error) {
+                document.getElementById("passes").innerHTML = `<p>Error loading passes: ${error.message}</p>`;
+            }
+        }
+
+        setInterval(fetchPasses, 10000); // Refresh every 10 seconds
+        fetchPasses(); // Load initially
+    </script>
+</body>
+</html>
