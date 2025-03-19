@@ -57,7 +57,7 @@
     <script>
         async function fetchPasses() {
             try {
-                const response = await fetch("https://script.google.com/macros/s/AKfycbyv8y2ipxv27H9Q0tFuWQZk7CCSr2XO3fI8nYdhh2OahXPIJ8fGWUGYPFc3YVw7kh6kSQ/exec");
+                const response = await fetch("https://script.google.com/macros/s/AKfycbweqHiKMeHhGWWG3kF_MjURXL-7bnEdQkJauG_qLWaQ-oDUbk1DpuEPXZd5cas3mTdO0w/exec");
                 if (!response.ok) throw new Error(`Server returned ${response.status}`);
 
                 const data = await response.json();
