@@ -89,6 +89,8 @@
                 if (!response.ok) throw new Error(`Server returned ${response.status}`);
 
                 const data = await response.json();
+                console.log("Fetched Data:", data); // Debugging log
+
                 const passesTable = document.getElementById("passes");
                 passesTable.innerHTML = ""; // Clear previous content
 
@@ -97,12 +99,15 @@
                     return;
                 }
 
-                if (data.length === 0) {
+                if (!Array.isArray(data) || data.length === 0) {
                     passesTable.innerHTML = `<tr><td colspan="4">No active passes.</td></tr>`;
                     return;
                 }
 
-                data.slice(-10).forEach(pass => {
+                // Ensure student names are being retrieved correctly
+                data.forEach(pass => {
+                    console.log(`Pass Entry - Student: ${pass.student}, ID: ${pass.studentID}`); // Debugging log
+
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td class="student">${pass.student}</td>
@@ -114,7 +119,8 @@
                 });
 
             } catch (error) {
-                document.getElementById("passes").innerHTML = `<tr><td colspan="4">Error loading passes: ${error.message}</td></tr>`;
+                console.error("Error loading passes:", error);
+                document.getElementById("passes").innerHTML = `<tr><td colspan="4">Error loading passes.</td></tr>`;
             }
         }
 
