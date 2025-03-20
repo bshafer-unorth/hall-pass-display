@@ -125,15 +125,9 @@
         }
 
         function getDestinationIcon(destination) {
-            const icons = {
-                "Bathroom": "🚽",
-                "Office": "🏫",
-                "Library": "📚",
-                "Nurse": "🩺",
-                "Other": "💡"
-            };
-            return icons[destination] || "➡️"; // Default arrow icon if no match
-        }
+    return destination; // Returns only text, no icons
+}
+
 
         function startRefreshCountdown() {
             let timeLeft = 10;
