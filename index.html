@@ -18,8 +18,8 @@
             text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
         }
         table {
-            width: 90%;
-            max-width: 800px;
+            width: 95%;
+            max-width: 1000px;
             margin: 20px auto;
             border-collapse: collapse;
             background-color: #222;
@@ -89,10 +89,8 @@
                 if (!response.ok) throw new Error(`Server returned ${response.status}`);
 
                 const data = await response.json();
-                console.log("Fetched Data:", data); // Debugging log
-
                 const passesTable = document.getElementById("passes");
-                passesTable.innerHTML = ""; // Clear previous content
+                passesTable.innerHTML = "";
 
                 if (data.error) {
                     passesTable.innerHTML = `<tr><td colspan="4">Error: ${data.error}</td></tr>`;
@@ -104,30 +102,21 @@
                     return;
                 }
 
-                // Ensure student names are being retrieved correctly
                 data.forEach(pass => {
-                    console.log(`Pass Entry - Student: ${pass.student}, ID: ${pass.studentID}`); // Debugging log
-
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td class="student">${pass.student}</td>
                         <td>${pass.teacher}</td>
-                        <td class="destination">${getDestinationIcon(pass.destination)} ${pass.destination}</td>
+                        <td class="destination">${pass.destination}</td>
                         <td class="time">${new Date(pass.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                     `;
                     passesTable.appendChild(row);
                 });
 
             } catch (error) {
-                console.error("Error loading passes:", error);
                 document.getElementById("passes").innerHTML = `<tr><td colspan="4">Error loading passes.</td></tr>`;
             }
         }
-
-        function getDestinationIcon(destination) {
-    return destination; // Returns only text, no icons
-}
-
 
         function startRefreshCountdown() {
             let timeLeft = 10;
@@ -138,8 +127,8 @@
             }, 1000);
         }
 
-        setInterval(fetchPasses, 10000); // Refresh every 10 seconds
-        fetchPasses(); // Load initially
+        setInterval(fetchPasses, 10000);
+        fetchPasses();
         startRefreshCountdown();
     </script>
 </body>
