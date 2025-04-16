@@ -63,10 +63,21 @@
             font-size: 1em;
             color: #aaaaaa;
         }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinning-toilet {
+            display: inline-block;
+            font-size: 3em;
+            animation: spin 2s linear infinite;
+        }
     </style>
 </head>
 <body>
-    <h1>Active Hall Passes</h1>
+    <h1>Active Hall Passes <span class="spinning-toilet">🚽</span></h1>
     <p class="refresh-info">Refreshing in <span id="refresh-timer">10</span> seconds...</p>
     <table>
         <thead>
